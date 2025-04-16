@@ -23,7 +23,7 @@ int main() {
     scanf("%s", estado1);
 
     printf("Nome da cidade: ");
-    scanf(" %[^\n]", nome1); // Lê até o enter
+    scanf(" %[^\n]", nome1); // Lê o enter
 
     printf("População: ");
     scanf("%d", &populacao1);
@@ -71,9 +71,9 @@ int main() {
 
     if (populacao1 > populacao2) {
         printf("\nResultado: Carta 1 (%s) venceu!\n", nome1);
-    } else if (populacao2 > populacao1) {
+    } else if (populacao2 > populacao1) { //else if para segunda condição
         printf("\nResultado: Carta 2 (%s) venceu!\n", nome2);
-    } else {
+    } else { //else comum para empate se tiver
         printf("\nResultado: Empate!\n");
     }
 
