@@ -2,87 +2,102 @@
 #include <string.h>
 
 typedef struct {
-    char nome[30];
+    char nome[50];
     int populacao;
-    float area;
-    float pib;
-    int pontos_turisticos;
-    float densidade_demografica;
+    int area;
+    float densidade;
+    int pib;
 } Carta;
 
+void exibirMenuAtributos(int escolhido) {
+    printf("Escolha um atributo:\n");
+    if (escolhido != 1) printf("1 - População\n");
+    if (escolhido != 2) printf("2 - Área\n");
+    if (escolhido != 3) printf("3 - Densidade Demográfica\n");
+    if (escolhido != 4) printf("4 - PIB\n");
+}
+
+float obterValor(Carta c, int atributo) {
+    switch (atributo) {
+        case 1: return (float)c.populacao;
+        case 2: return (float)c.area;
+        case 3: return c.densidade;
+        case 4: return (float)c.pib;
+        default: return 0;
+    }
+}
+
+const char* nomeAtributo(int atributo) {
+    switch (atributo) {
+        case 1: return "População";
+        case 2: return "Área";
+        case 3: return "Densidade Demográfica";
+        case 4: return "PIB";
+        default: return "Desconhecido";
+    }
+}
+
 int main() {
-    // Duas cartas cadastradas
-    Carta carta1 = {"Brasil", 211000000, 8515767, 2.05, 30, 24.78};
-    Carta carta2 = {"Argentina", 44938712, 2780400, 0.45, 20, 16.16};
+    // Cartas pré-definidas
+    Carta carta1 = {"Brasil", 213000000, 8515767, 25.0, 15000};
+    Carta carta2 = {"Japão", 125800000, 377975, 332.8, 40000};
 
-    int escolha;
+    int atributo1 = 0, atributo2 = 0;
 
-    printf("=== SUPER TRUNFO: CARTAS DE PAÍSES ===\n");
-    printf("Escolha o atributo para comparar:\n");
-    printf("1. População\n");
-    printf("2. Área\n");
-    printf("3. PIB\n");
-    printf("4. Pontos Turísticos\n");
-    printf("5. Densidade Demográfica\n");
-    printf("Escolha: ");
-    scanf("%d", &escolha);
+    // Escolha do primeiro atributo
+    do {
+        exibirMenuAtributos(0);
+        printf("Escolha o primeiro atributo: ");
+        scanf("%d", &atributo1);
+        if (atributo1 < 1 || atributo1 > 4) {
+            printf("Atributo inválido. Tente novamente.\n");
+            atributo1 = 0;
+        }
+    } while (atributo1 == 0);
 
-    printf("\n--- Comparando %s vs %s ---\n", carta1.nome, carta2.nome);
+    // Escolha do segundo atributo, diferente do primeiro
+    do {
+        exibirMenuAtributos(atributo1);
+        printf("Escolha o segundo atributo (diferente do primeiro): ");
+        scanf("%d", &atributo2);
+        if (atributo2 < 1 || atributo2 > 4 || atributo2 == atributo1) {
+            printf("Atributo inválido. Tente novamente.\n");
+            atributo2 = 0;
+        }
+    } while (atributo2 == 0);
 
-    switch (escolha) {
-        case 1:
-            printf("População: %d vs %d\n", carta1.populacao, carta2.populacao);
-            if (carta1.populacao > carta2.populacao)
-                printf("Vencedor: %s\n", carta1.nome);
-            else if (carta1.populacao < carta2.populacao)
-                printf("Vencedor: %s\n", carta2.nome);
-            else
-                printf("Empate!\n");
-            break;
+    float val1_attr1 = obterValor(carta1, atributo1);
+    float val2_attr1 = obterValor(carta2, atributo1);
 
-        case 2:
-            printf("Área: %.2f km² vs %.2f km²\n", carta1.area, carta2.area);
-            if (carta1.area > carta2.area)
-                printf("Vencedor: %s\n", carta1.nome);
-            else if (carta1.area < carta2.area)
-                printf("Vencedor: %s\n", carta2.nome);
-            else
-                printf("Empate!\n");
-            break;
+    float val1_attr2 = obterValor(carta1, atributo2);
+    float val2_attr2 = obterValor(carta2, atributo2);
 
-        case 3:
-            printf("PIB: %.2f trilhões USD vs %.2f trilhões USD\n", carta1.pib, carta2.pib);
-            if (carta1.pib > carta2.pib)
-                printf("Vencedor: %s\n", carta1.nome);
-            else if (carta1.pib < carta2.pib)
-                printf("Vencedor: %s\n", carta2.nome);
-            else
-                printf("Empate!\n");
-            break;
+    printf("\n--- RESULTADO DA COMPARAÇÃO ---\n");
+    printf("Carta 1: %s\n", carta1.nome);
+    printf("Carta 2: %s\n\n", carta2.nome);
 
-        case 4:
-            printf("Pontos Turísticos: %d vs %d\n", carta1.pontos_turisticos, carta2.pontos_turisticos);
-            if (carta1.pontos_turisticos > carta2.pontos_turisticos)
-                printf("Vencedor: %s\n", carta1.nome);
-            else if (carta1.pontos_turisticos < carta2.pontos_turisticos)
-                printf("Vencedor: %s\n", carta2.nome);
-            else
-                printf("Empate!\n");
-            break;
+    printf("%s: %.2f vs %.2f --> %s\n", nomeAtributo(atributo1), val1_attr1, val2_attr1,
+           atributo1 == 3 ?
+           (val1_attr1 < val2_attr1 ? carta1.nome : carta2.nome) :
+           (val1_attr1 > val2_attr1 ? carta1.nome : carta2.nome));
 
-        case 5:
-            printf("Densidade Demográfica: %.2f vs %.2f\n", carta1.densidade_demografica, carta2.densidade_demografica);
-            if (carta1.densidade_demografica < carta2.densidade_demografica)
-                printf("Vencedor: %s (menor densidade)\n", carta1.nome);
-            else if (carta1.densidade_demografica > carta2.densidade_demografica)
-                printf("Vencedor: %s (menor densidade)\n", carta2.nome);
-            else
-                printf("Empate!\n");
-            break;
+    printf("%s: %.2f vs %.2f --> %s\n", nomeAtributo(atributo2), val1_attr2, val2_attr2,
+           atributo2 == 3 ?
+           (val1_attr2 < val2_attr2 ? carta1.nome : carta2.nome) :
+           (val1_attr2 > val2_attr2 ? carta1.nome : carta2.nome));
 
-        default:
-            printf("Opção inválida!\n");
-            break;
+    float soma1 = val1_attr1 + val1_attr2;
+    float soma2 = val2_attr1 + val2_attr2;
+
+    printf("\nSoma dos atributos:\n%s: %.2f\n%s: %.2f\n", carta1.nome, soma1, carta2.nome, soma2);
+
+    printf("\nResultado final: ");
+    if (soma1 > soma2) {
+        printf("%s venceu a rodada!\n", carta1.nome);
+    } else if (soma2 > soma1) {
+        printf("%s venceu a rodada!\n", carta2.nome);
+    } else {
+        printf("Empate!\n");
     }
 
     return 0;
